@@ -1,0 +1,8 @@
+MY Workspace
+
+npm start
+
+npm i
+npx i
+
+npx prisma studio 
