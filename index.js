@@ -1,13 +1,23 @@
 const prisma = require('./prisma/prismaClient')
+const AuthController = require('./controllers/AuthControllers');
 
 const express= require('express')
 const app = express()
 app.use(express.json())
 
-const authRoutes = require('./routes/authRoutes')
+const cors = require('cors');
+app.use(cors({ origin: 'http://localhost:3000' }));
 
+const authRoutes = require('./routes/authRoutes')
 app.use('/auth', authRoutes)
 
+
+const tableRoutes = require('./routes/tableRoutes')   
+app.get('/table', AuthController.VerificaAutencicao ,tableRoutes)
+
+const admRoutes = require('./routes/admRoutes');
+
+app.use('/adm', AuthController.VerificaAutencicao, AuthController.VerificaADM , admRoutes);
 
 app.listen(8000)
 

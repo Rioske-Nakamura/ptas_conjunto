@@ -49,7 +49,7 @@ class AuthController {
                     email,
                     password: hashPass,
                     tipo: "Cliente"
-                }
+                }///ADM
             });
             const token = jwt.sign(
                 { id: usuario.id },
@@ -65,8 +65,9 @@ class AuthController {
             return res.status(500).json({
                 erro: true,
                 msg: "Erro ao cadastrar o usuário, tente novamente",
-                error
+                error: error.message || error
             });
+            
         }
     }
 
@@ -102,6 +103,55 @@ class AuthController {
             msg: "Login efetuado com sucesso",
             token
         });
+    }
+
+    static async VerificaAutenticacao(req, res, next) {
+        try {
+            const authHeader = req.headers['authorization'];
+            const token = authHeader && authHeader.split(' ')[1];
+    
+            if (!token) {
+                return res.status(401).json({
+                    erro: true,
+                    msg: "Token não encontrado"
+                });
+            }
+    
+            jwt.verify(token, process.env.SECRET_KEY, (err, payload) => {
+                if (err) {
+                    return res.status(403).json({
+                        erro: true,
+                        msg: "Token inválido"
+                    });
+                }
+                req.usuarioID = payload.id;
+                next();
+            });
+        } catch (error) {
+            return res.status(500).json({
+                erro: true,
+                msg: "Erro interno no servidor"
+            });
+        }
+    }
+    
+
+    static async VerificaADM(req, res, next) {
+        const usuario = await prisma.user.findUnique({
+            where: { id: req.usuarioID }
+        });
+
+        if (usuario.tipo == "ADM") {
+           
+            next()
+        }else{
+            return res.status(403).json({
+                erro: true,
+                msg: "Você não tem permissão para acessar esse recurso"
+            });
+        }
+
+
     }
 }
 

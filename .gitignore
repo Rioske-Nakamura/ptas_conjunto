@@ -1,8 +1,8 @@
 node_modules
 # Keep environment variables out of version control
-.env
 
 
 /prisma/banco.db
 /prisma/migrations
 mst.js
+.codegpt
