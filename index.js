@@ -18,7 +18,7 @@ app.get('/table', AuthController.VerificaAutenticacao, tableRoutes);
 
 const admRoutes = require('./routes/admRoutes');
 
-app.use('/adm',  AuthController.VerificaAutenticacao, AuthController.VerificaADM , admRoutes);
+app.use('/adm', admRoutes);
 
 app.listen(8000)
 
