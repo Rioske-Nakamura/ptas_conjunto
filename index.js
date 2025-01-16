@@ -1,5 +1,5 @@
 const prisma = require('./prisma/prismaClient')
-const AuthController = require('./controllers/AuthControllers');
+
 
 const express= require('express')
 const app = express()
@@ -12,13 +12,11 @@ const authRoutes = require('./routes/authRoutes')
 app.use('/auth', authRoutes)
 
 
-const tableRoutes = require('./routes/tableRoutes');   
-app.get('/table', AuthController.VerificaAutenticacao, tableRoutes);
-
+const tableRoutes = require('./routes/tableRoutes')   
+app.use('/table', tableRoutes)
 
 const admRoutes = require('./routes/admRoutes');
-
-app.use('/adm', admRoutes);
+app.use('/admin', admRoutes);
 
 app.listen(8000)
 
