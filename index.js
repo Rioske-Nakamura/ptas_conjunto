@@ -12,12 +12,13 @@ const authRoutes = require('./routes/authRoutes')
 app.use('/auth', authRoutes)
 
 
-const tableRoutes = require('./routes/tableRoutes')   
-app.get('/table', AuthController.VerificaAutencicao ,tableRoutes)
+const tableRoutes = require('./routes/tableRoutes');   
+app.get('/table', AuthController.VerificaAutenticacao, tableRoutes);
+
 
 const admRoutes = require('./routes/admRoutes');
 
-app.use('/adm', AuthController.VerificaAutencicao, AuthController.VerificaADM , admRoutes);
+app.use('/adm',  AuthController.VerificaAutenticacao, AuthController.VerificaADM , admRoutes);
 
 app.listen(8000)
 
