@@ -22,6 +22,7 @@ class AdminController {
       });
     }
   }
+ 
   static async getAllTables(req, res) {
     try {
       const tables = await prisma.table.findMany(); // Busca todas as mesas
@@ -37,20 +38,32 @@ class AdminController {
       });
     }
   }
+  
   // Excluir mesa
   static async deleteTable(req, res) {
-    const { tableName } = req.params; // Nome da mesa a ser excluída
-
+    // Obtenha o tableId da URL e converta para número
+    const { tableId } = req.params;
+    const tableIdNum = parseInt(tableId, 10); // Converter para número
+  
+    // Verificar se a conversão deu certo
+    if (isNaN(tableIdNum)) {
+      return res.status(400).json({
+        erro: true,
+        msg: "ID inválido fornecido para exclusão.",
+      });
+    }
+  
     try {
       const table = await prisma.table.delete({
-        where: { name: tableName },
+        where: { id: tableIdNum }, // Usando o ID convertido corretamente
       });
-
+  
       return res.status(200).json({
         erro: false,
         msg: "Mesa excluída com sucesso.",
       });
     } catch (error) {
+      console.error("Erro ao excluir mesa:", error); // Log para debugar
       return res.status(500).json({
         erro: true,
         msg: "Erro ao excluir a mesa.",
@@ -58,7 +71,12 @@ class AdminController {
       });
     }
   }
+  
+  
+  
+  
 
+  
 // Adicionar mesa
 static async addTable(req, res) {
   const { name, columns, rows } = req.body;
@@ -93,26 +111,21 @@ static async addTable(req, res) {
 
   // Cancelar reserva da mesa
   static async cancelReservation(req, res) {
-    const { tableId, userId } = req.body; // ID da mesa e ID do usuário
-
+    const { tableId } = req.body;
+  
     try {
-      const table = await prisma.table.findUnique({
-        where: { id: tableId },
-      });
-
-      if (!table || table.userId !== userId) {
-        return res.status(403).json({
-          erro: true,
-          msg: "A mesa não está reservada ou não pertence ao usuário.",
-        });
-      }
-
-      // Cancelar a reserva (remover o userId da mesa)
-      await prisma.table.update({
+      const table = await prisma.table.update({
         where: { id: tableId },
         data: { userId: null },
       });
-
+  
+      if (!table) {
+        return res.status(404).json({
+          erro: true,
+          msg: "Mesa não encontrada.",
+        });
+      }
+  
       return res.status(200).json({
         erro: false,
         msg: "Reserva cancelada com sucesso.",
@@ -125,6 +138,7 @@ static async addTable(req, res) {
       });
     }
   }
+  
 }
 
 module.exports = AdminController;
