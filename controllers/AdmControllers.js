@@ -1,9 +1,9 @@
 const prisma = require('../prisma/prismaClient');
 
 class AdminController {
-  // Excluir usuário
+
   static async deleteUser(req, res) {
-    const { userId } = req.params; // ID do usuário a ser excluído
+    const { userId } = req.params;
 
     try {
       const user = await prisma.user.delete({
@@ -22,7 +22,21 @@ class AdminController {
       });
     }
   }
-
+  static async getAllTables(req, res) {
+    try {
+      const tables = await prisma.table.findMany(); // Busca todas as mesas
+      return res.status(200).json({
+        erro: false,
+        tables,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        erro: true,
+        msg: "Erro ao buscar mesas.",
+        error,
+      });
+    }
+  }
   // Excluir mesa
   static async deleteTable(req, res) {
     const { tableName } = req.params; // Nome da mesa a ser excluída

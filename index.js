@@ -12,29 +12,12 @@ const authRoutes = require('./routes/authRoutes')
 app.use('/auth', authRoutes)
 
 
+const AuthController = require('./controllers/AuthControllers');
 const tableRoutes = require('./routes/tableRoutes')   
 app.use('/table', tableRoutes)
 
+
 const admRoutes = require('./routes/admRoutes');
-app.use('/admin', admRoutes);
+app.use('/admin',  admRoutes);
 
 app.listen(8000)
-
-
-/*async function main() {  
-    const user = await prisma.user.create({
-        data: {
-            nome: 'Marya',
-            email: 'marya@example.com',
-            password: '123456',
-            tipo: 'Ajudante'
-        }
-    })
-    console.log("User created: " + JSON.stringify(user))
-
-    const users = await prisma.user.findMany()
-    console.log("Users: " )
-    console.log(users)
-}
-
-main()*/

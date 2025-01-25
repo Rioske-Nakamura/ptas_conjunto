@@ -141,7 +141,7 @@ class AuthController {
             where: { id: req.usuarioID }
         });
 
-        if (usuario.tipo == "ADM") {
+        if (usuario.tipo == "Cliente") {
            
             next()
         }else{
