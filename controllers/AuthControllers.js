@@ -52,7 +52,7 @@ class AuthController {
                 }///ADM
             });
             const token = jwt.sign(
-                { id: usuario.id },
+                { id: usuario.id, tipo: usuario.tipo},
                 process.env.SECRET_KEY,
                 { expiresIn: "1h" }
             );
@@ -93,7 +93,7 @@ class AuthController {
         }
 
         const token = jwt.sign(
-            { id: usuario.id },
+            { id: usuario.id, tipo: usuario.tipo},
             process.env.SECRET_KEY,
             { expiresIn: "1h" }
         );
@@ -137,22 +137,36 @@ class AuthController {
     
 
     static async VerificaADM(req, res, next) {
-        const usuario = await prisma.user.findUnique({
-            where: { id: req.usuarioID }
-        });
-
-        if (usuario.tipo == "Cliente") {
-           
-            next()
-        }else{
-            return res.status(403).json({
+        try {
+            const usuario = await prisma.user.findUnique({
+                where: { id: req.usuarioID }
+            });
+    
+            if (!usuario) {
+                return res.status(404).json({
+                    erro: true,
+                    msg: "Usuário não encontrado"
+                });
+            }
+    
+            if (usuario.tipo !== "ADM") {
+                return res.status(403).json({
+                    erro: true,
+                    msg: "Você não tem permissão para acessar esse recurso"
+                });
+            }
+    
+            // Se for "ADM", continua para a próxima rota
+            next();
+        } catch (error) {
+            return res.status(500).json({
                 erro: true,
-                msg: "Você não tem permissão para acessar esse recurso"
+                msg: "Erro interno no servidor",
+                error: error.message || error
             });
         }
-
-
     }
+    
 }
 
 module.exports = AuthController;

@@ -5,8 +5,8 @@ const AdminController = require('../controllers/AdmControllers');
 // Excluir usuário
 router.delete('/delete-user/:userId', AdminController.deleteUser);
 
-// Excluir mesa
-router.delete('/delete-table/:tableName', AdminController.deleteTable);
+
+router.delete('/delete-table/:tableId', AdminController.deleteTable);
 
 // Adicionar mesa
 router.post('/add-table', AdminController.addTable);
