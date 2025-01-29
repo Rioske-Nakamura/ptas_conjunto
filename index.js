@@ -11,6 +11,9 @@ app.use(cors({ origin: 'http://localhost:3000' }));
 const authRoutes = require('./routes/authRoutes')
 app.use('/auth', authRoutes)
 
+const perfil = require('./routes/perfilRoutes')
+
+app.use('/perfil', perfil)
 
 const AuthController = require('./controllers/AuthControllers');
 const tableRoutes = require('./routes/tableRoutes')   
