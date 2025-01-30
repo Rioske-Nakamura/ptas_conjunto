@@ -13,14 +13,14 @@ app.use('/auth', authRoutes)
 
 const perfil = require('./routes/perfilRoutes')
 
-app.use('/perfil', perfil)
+app.use('/perfil', AuthController.VerificaAutenticacao,perfil)
 
 const AuthController = require('./controllers/AuthControllers');
 const tableRoutes = require('./routes/tableRoutes')   
-app.use('/table', tableRoutes)
+app.use('/table', AuthController.VerificaAutenticacao, tableRoutes)
 
 
 const admRoutes = require('./routes/admRoutes');
-app.use('/admin',  admRoutes);
+app.use('/admin', AuthController.VerificaADM, admRoutes);
 
 app.listen(8000)
